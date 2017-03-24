@@ -13,14 +13,11 @@ describe Oystercard do
     it "shows balance on the card" do
       expect(oystercard.balance).to eq 0
     end
-  end
-
-  describe '#top_up' do
     context 'when no balance' do
       it "adds money to the card" do
         expect{ oystercard.top_up(20) }.to change{ subject.balance }.by 20
       end
-    end
+  end
 
     context 'when balance' do
       it 'raises an error when the balance surpasses 90' do

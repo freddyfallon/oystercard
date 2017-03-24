@@ -1,7 +1,15 @@
 require 'journeylog'
 
 describe JourneyLog do
-  describe '#journey_log' do
-    it {is_expected.to respond_to(:journey_log)}
+
+  describe '#journeys' do
+    it { is_expected.to respond_to(:journeys) }
   end
+
+  describe '#current_journey' do
+    it 'is expected to respond to current_journey' do
+      expect(subject).to respond_to(:current_journey)
+    end
+  end
+
 end

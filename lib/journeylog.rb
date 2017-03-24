@@ -1,9 +1,10 @@
 class JourneyLog
-
-  attr_reader :journey_log
-
+  attr_reader :journeys, :current_journey
   def initialize
-    @journey_log
+    @journeys = []
   end
 
+  def current_journey
+
+  end
 end
