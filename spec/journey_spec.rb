@@ -30,49 +30,46 @@ describe Journey do
     end
   end
 
-  describe '#fare' do
-    it 'has a penalty fare by default' do
+  describe '#penalty_charge' do
+    it 'has a penalty charge by default' do
       journey.start_journey
-      expect(journey.fare).to eq Journey::PENALTY_FARE
-    end
-
-
-    it 'is initially equal to the minimum fare' do
-    allow(journey).to receive(:ended).and_return(true)
-    expect(journey.fare).to eq 1
+      expect(journey.penalty_charge).to eq Journey::PENALTY_FARE
     end
 
     context 'given an entry station' do
       subject {described_class.new(entry_station: station)}
       it "returns a penalty fare if no exit station given" do
         journey.start_journey
-        expect(journey.fare).to eq Journey::PENALTY_FARE
+        expect(journey.penalty_charge).to eq Journey::PENALTY_FARE
       end
     end
 
+  end
+
+  describe '#exit_charge' do
     context 'given an exit station' do
       let(:other_station) { double :other_station }
 
-      before do
-        journey.end_journey(other_station)
-      end
-
       it 'calculates a fare' do
-        expect(journey.fare).to eq 1
+        journey.start_journey
+        expect(journey.exit_charge).to eq 1
       end
 
+    end
+
+    describe '#complete?' do
+      it 'knows if a journey is not complete' do
+        expect(journey).not_to be_complete
+      end
+
+      context 'given an exit station' do
+        let(:other_station) { double :other_station }
       it 'knows if a journey is complete' do
+        journey.start_journey
+        journey.end_journey(other_station)
         expect(journey).to be_complete
       end
-
     end
-
-  end
-
-  describe '#complete?' do
-    it 'knows if a journey is not complete' do
-      expect(journey).not_to be_complete
     end
   end
-
 end

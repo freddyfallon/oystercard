@@ -53,11 +53,17 @@ describe Oystercard do
         oystercard.touch_in(entry_station)
         expect{oystercard.touch_out(exit_station)}.to change{oystercard.balance}.by (-Oystercard::MINIMUM_TRAVEL_BALANCE)
       end
-
+      it 'deducts the penalty charge when touching out twice' do
+        oystercard.top_up(20)
+        oystercard.touch_in(entry_station)
+        oystercard.touch_out(exit_station)
+        expect{oystercard.touch_out(exit_station)}.to change{oystercard.balance}.by (-6)
+      end
     end
   end
 
   describe '#journey_history' do
+
     context 'before starting any journeys' do
       it 'has an empty list of journeys by default' do
         expect(oystercard.journey_history).to be_empty
@@ -72,5 +78,6 @@ describe Oystercard do
         expect(oystercard.journey_history).to eq [journey]
       end
     end
+
   end
 end

@@ -15,23 +15,24 @@ class Oystercard
 
   def top_up(money)
     fail "Maximum balance of #{MAXIMUM_BALANCE} reached" if @balance + money > MAXIMUM_BALANCE
-    @balance += money
+    self.balance += money
   end
 
   def touch_in(station)
     fail "Insufficient funds. £1 minimum needed to travel." if @balance < MINIMUM_TRAVEL_BALANCE
-    if defined?(journey.fare)
-      deduct(journey.fare)
+    if defined?(journey.ended) # checks if the journey class has been instantiated
+      deduct(journey.penalty_charge) # if so, run the penalty far deduct method
     else
-      @journey = Journey.new(station)
+      @journey = Journey.new(station) # instantiates the class
+      journey.start_journey # marked ended as being false
     end
-    self.journey.start_journey
   end
 
   def touch_out(station)
-    self.journey.end_journey(station)
-    deduct(journey.fare)
-    self.add_to_journey_history(station)
+    deduct(journey.exit_charge)
+    journey.end_journey(station)
+    journey.clear_ended
+    add_to_journey_history(station)
   end
 
   def add_to_journey_history(station)
@@ -43,7 +44,7 @@ class Oystercard
   attr_writer :deduct, :balance
 
   def deduct(fare)
-    @balance -= fare
+    self.balance -= fare
   end
 
 end
